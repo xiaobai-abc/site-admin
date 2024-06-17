@@ -1,11 +1,12 @@
 import { Button } from "@/shadcn-ui/ui/button";
+import { ScrollArea } from "@/shadcn-ui/ui/scroll-area";
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/shadcn-ui/ui/card";
 import {
   Drawer,
@@ -15,7 +16,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
+  DrawerTrigger
 } from "@/shadcn-ui/ui/drawer";
 import { Switch } from "@/shadcn-ui/ui/switch";
 import { Label } from "@/shadcn-ui/ui/label";
@@ -23,33 +24,37 @@ import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
-  TooltipTrigger,
+  TooltipTrigger
 } from "@/shadcn-ui/ui/tooltip";
 
-import * as lucideDefault from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  setThemeMode,
+  setThemeColor,
+  getThemeColorList
+} from "@/store/modules/themeSlice.js";
+import { useDispatch, useSelector } from "react-redux";
 
-const themeColor = ["green"];
+import LoadingComponent from "@/components/LodingComponent";
+import Transition from "../components/Transition";
+
+import { useEffect, useState, lazy, Suspense } from "react";
+
+const LazyIcons = lazy(
+  () =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(import("./component/LazyIcons"));
+      }, 10000);
+    })
+);
 
 // 主题测试 shadcn ui 框架的 主题颜色测试组件
 export default function ThemeTest() {
-  const [lucideIcon, setLucide] = useState([]);
+  console.log("render");
+  const [toggle, setToggle] = useState(false);
+  const themeColorList = useSelector(getThemeColorList);
 
-  useEffect(() => {
-    const iconsKeys = Object.keys(lucideDefault);
-
-    const temp = [];
-    iconsKeys.forEach((key) => {
-      const name = lucideDefault[key].displayName;
-      if (!temp.includes(name)) {
-        temp.push(name);
-      }
-    });
-    console.log(temp.length);
-    setLucide(temp);
-    // setLucide(iconsKeys.splice(0, 10));
-    // setLucide(iconsKeys);
-  }, []);
+  useEffect(() => {}, []);
 
   function onSwitchChange(boo) {
     if (boo) {
@@ -59,14 +64,21 @@ export default function ThemeTest() {
     }
   }
 
-  function onThemeColor(key) {
-    console.log(key)
-    // theme-blue
-    document.body.className = `theme-blue`;
-  }
+  // function onThemeColor(key) {
+  //   console.log(key)
+  //   // theme-blue
+  //   document.body.className = `theme-blue`;
+  // }
 
   return (
-    <div className="border border-red-500 p-2">
+    <div className="border border-red-500 p-2 ">
+      <div className="br w-fit m-6 p-2 ">
+        <Button onClick={() => setToggle((t) => !t)}>切换</Button>
+        <Transition in={toggle} className="absolute">
+          <div className="bg-[red] w-[100px] h-[100px]"></div>
+        </Transition>
+      </div>
+
       <Card className="min-w-[200px] w-fit mb-6 p-3">
         <CardTitle>主题测试</CardTitle>
 
@@ -77,7 +89,7 @@ export default function ThemeTest() {
           </div>
           <div className="border border-red-500 ml-4">
             <TooltipProvider>
-              {themeColor.map((key) => {
+              {/* {themeColor.map((key) => {
                 return (
                   <Tooltip key={key}>
                     <TooltipTrigger asChild>
@@ -92,7 +104,7 @@ export default function ThemeTest() {
                     <TooltipContent>{key}</TooltipContent>
                   </Tooltip>
                 );
-              })}
+              })} */}
             </TooltipProvider>
           </div>
         </CardContent>
@@ -104,42 +116,22 @@ export default function ThemeTest() {
           </DrawerTrigger>
           <DrawerContent className="px-6 pb-4">
             <DrawerTitle className="mb-2">icon 列表</DrawerTitle>
-            <div className="h-[36vh] overflow-auto ">
-              {(function () {
-                function buttonClick(key) {
-                  console.log(key);
+            <ScrollArea className="h-[50vh] rounded-md border p-4">
+              {/* <Suspense
+                fallback={
+                  <LoadingComponent className="mt-[100px]">
+                    {(state) => {
+                      console.log(state);
+                      return <div>xxxx</div>;
+                    }}
+                  </LoadingComponent>
                 }
-
-                return lucideIcon
-                  .filter((key) => {
-                    return (
-                      typeof lucideDefault[key] === "object" &&
-                      lucideDefault[key].displayName
-                    );
-                  })
-                  .map((key) => {
-                    // const IconAA = lucideDefault[key];
-                    const Icon = lucideDefault[key];
-                    return (
-                      <Button
-                        className="mr-2 mb-2"
-                        key={key}
-                        variant="outline"
-                        onClick={() => buttonClick(key)}
-                      >
-                        <Icon></Icon>
-                      </Button>
-                    );
-                  });
-              })()}
-            </div>
-
-            {/* <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose> */}
+              >
+                <LazyIcons> </LazyIcons>
+              </Suspense> */}
+            </ScrollArea>
           </DrawerContent>
         </Drawer>
-
         <Button className="mr-2" variant="destructive">
           Destructive
         </Button>
@@ -152,9 +144,6 @@ export default function ThemeTest() {
         <Button className="mr-2" variant="link">
           Link
         </Button>
-        {/* <Button variant="outline" size="icon">
-             
-        </Button> */}
       </div>
 
       <Card className="w-96 mb-4">

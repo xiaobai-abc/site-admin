@@ -1,0 +1,92 @@
+// 组合过渡动效 scale-slide
+
+.scale-slide {
+  position: absolute;
+  transition-duration: 0.25s;
+  z-index: 10;
+
+  &-exited-in {
+    // in 1
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  &-entering-in {
+    // in 2
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &-entered-in {
+    // in 3
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &-entered-out {
+    // out 1
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+
+  &-exiting-out {
+    // out 2
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+
+  &-exited-out {
+    // out 3
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+
+}
+
+// end =======
+
+// 缩放过渡动效
+.scale {
+
+  &-entered-out,
+  &-entering-in,
+  &-entered-in {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &-exited-in,
+  &-exiting-out,
+  &-exited-out {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+
+// end ========
+
+// 渐变 
+
+.fade {
+
+  &-entered-out,
+  &-entering-in,
+  &-entered-in {
+    opacity: 1;
+  }
+
+  &-exited-in,
+  &-exiting-out,
+  &-exited-out {
+    opacity: 0;
+  }
+}
+
+
+
+
+
+
+
+// end ======

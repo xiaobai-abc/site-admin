@@ -1,0 +1,6 @@
+@layer base {
+  /* 自定义 红色边框 */
+  .br {
+    @apply border border-red-500;
+  }
+}
