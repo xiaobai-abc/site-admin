@@ -3,4 +3,8 @@
   .br {
     @apply border border-red-500;
   }
+  /* 跟随主题颜色 暂时用作 icon color */
+  .dc {
+    color: hsl(var(--primary));
+  }
 }

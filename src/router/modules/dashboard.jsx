@@ -16,6 +16,6 @@ export default {
   ],
   meta: {
     label: "仪表盘",
-    icon: "IconDashboard",
+    icon: "CircleGauge",
   },
 };

@@ -12,9 +12,14 @@ const IconsKeys = ((keys) => {
   return result;
 })(Object.keys(lucideDefault));
 
-export default function LazyIcons() {
+export default function LazyIcons({ color }) {
+  console.log(color);
   return (
-    <div>
+    <div
+      style={{
+        color
+      }}
+    >
       {(function () {
         function buttonClick(key) {
           console.log(key);

@@ -20,7 +20,7 @@ const whiteRouteName = [];
   whiteRouteName.push(route.path);
 });
 
-const needAuthorization = false
+const needAuthorization = true
 
 export default function getRoutes() {
   // console.log("app");
@@ -43,7 +43,6 @@ export default function getRoutes() {
 
     if(!needAuthorization){
       console.log("不需要权限验证")
-
       return
     }
 

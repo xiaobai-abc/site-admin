@@ -35,18 +35,12 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 import LoadingComponent from "@/components/LodingComponent";
+
 import Transition from "../components/Transition";
 
 import { useEffect, useState, lazy, Suspense } from "react";
 
-const LazyIcons = lazy(
-  () =>
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(import("./component/LazyIcons"));
-      }, 10000);
-    })
-);
+const LazyIcons = lazy(() => import("./component/LazyIcons"));
 
 // 主题测试 shadcn ui 框架的 主题颜色测试组件
 export default function ThemeTest() {
@@ -118,15 +112,10 @@ export default function ThemeTest() {
             <ScrollArea className="h-[50vh] rounded-md border p-4">
               {/* <Suspense
                 fallback={
-                  <LoadingComponent className="mt-[100px]">
-                    {(state) => {
-                      console.log(state);
-                      return <div>xxxx</div>;
-                    }}
-                  </LoadingComponent>
+                  <LoadingComponent className="mt-[100px]"></LoadingComponent>
                 }
               >
-                <LazyIcons> </LazyIcons>
+                <LazyIcons color="hsl(var(--primary))"> </LazyIcons>
               </Suspense> */}
             </ScrollArea>
           </DrawerContent>

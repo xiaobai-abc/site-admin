@@ -16,7 +16,7 @@ const initialState = {
   lastUpdateTime: 0,
   dynamicAddedRoutes: false, //是否生成路由
   builderMenuList: [],
-  perCode: -1, //用户权限
+  perCode: 1, //用户权限
 };
 
 export const authSlice = createSlice({

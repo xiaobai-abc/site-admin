@@ -1,4 +1,3 @@
-import { Menu } from "@arco-design/web-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectAuthSlice } from "@/store/modules/authSlice.js";
@@ -6,12 +5,21 @@ import {
   useLocation,
   useNavigate,
   matchPath,
-  useRoutes,
+  useRoutes
 } from "react-router-dom";
-import { IconDashboard } from "@arco-design/web-react/icon";
 
-const MenuItem = Menu.Item;
-const SubMenu = Menu.SubMenu;
+// import { BaseMenu, MenuSubItem, MenuItem } from "./Base";
+import { CircleGauge, Ban } from "lucide-react";
+
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarSeparator,
+  // MenubarShortcut,
+  MenubarTrigger
+} from "@/shadcn-ui/ui/menubar";
 
 /**
  * @description 菜单列表
@@ -27,6 +35,7 @@ function RMenu() {
 
   useEffect(() => {
     const menuList = filterHasMenu(permMenuList);
+    console.log(menuList);
     setBuilderMenuList(menuList);
   }, [permMenuList]);
 
@@ -41,69 +50,65 @@ function RMenu() {
     //   loaction.pathname
     // )
     const path = loaction.pathname;
+    console.log(path);
     // menu 菜单似乎 本来就可以处理 是子路由的情况
     setCurrentRoute(path);
   }, [loaction.pathname]);
 
-  function getIconFromKey(key) {
-    switch (key) {
-      case "/dashboard":
-        return <IconDashboard />;
-      case "/classify":
-        return <IconDashboard />;
+  function getIconFromKey(icon) {
+    const size = "1rem";
+    const classname = "mr-3";
+    switch (icon) {
+      case "CircleGauge":
+        return <CircleGauge size={size} className={classname} />;
       default:
-        return <IconDashboard />;
+        return <Ban size={size} className={classname} />;
     }
   }
-
-  //定义方法:菜单无限级递归
-  function tree(data) {
-    return data.map((item) => {
-      if (item.children && item.children.length) {
-        return (
-          <SubMenu
-            key={item.key}
-            title={
-              <>
-                {getIconFromKey(item.key)}
-                {item.label}
-              </>
-            }
-          >
-            {tree(item.children)}
-          </SubMenu>
-        );
-      }
-      return (
-        <MenuItem key={item.key} style={{ transition: "all 0.25s" }}>
-          {/* {console.log(item.key , "?>>>>")} */}
-          {item.label}
-        </MenuItem>
-      );
-    });
-  }
-
-  // 点击菜单项
-  function handMenuItem(k) {
-    console.log(k);
-    if (k) {
-      currentRoute !== k && navgiate(k);
-      return;
-    }
-    console.log("跳转失败~~~~", k);
-  }
-
-  const element = tree(builderMenuList);
 
   return (
-    <Menu
-      selectedKeys={currentRoute}
-      style={{ height: "100%" }}
-      autoOpen={true}
-      onClickMenuItem={handMenuItem}
-    >
-      {element}
-    </Menu>
+    <Menubar>
+      <MenubarMenu>
+        <MenubarTrigger>File</MenubarTrigger>
+        <MenubarContent>
+          <MenubarItem></MenubarItem>
+          <MenubarItem>New Window</MenubarItem>
+          <MenubarSeparator />
+          <MenubarItem>Print</MenubarItem>
+        </MenubarContent>
+      </MenubarMenu>
+    </Menubar>
+
+    // <BaseMenu
+    //   selectedKey={currentRoute}
+    //   onClickSubMenu={(key) => console.log("asd", key)}
+    // >
+    //   {builderMenuList.map((item) => {
+    //     return (
+    //       <MenuSubItem
+    //         key={item.key}
+    //         path={item.key}
+    //         title={
+    //           <>
+    //             {getIconFromKey(item.icon)} {item.label}
+    //           </>
+    //         }
+    //       >
+    //         {item.children
+    //           ? item.children.map((items) => {
+    //               return (
+    //                 <MenuItem
+    //                   key={items.key}
+    //                   title={items.label}
+    //                   path={items.key}
+    //                 ></MenuItem>
+    //               );
+    //             })
+    //           : "no children"}
+    //       </MenuSubItem>
+    //     );
+    //   })}
+    // </BaseMenu>
   );
 }
 
@@ -121,7 +126,7 @@ function filterHasMenu(list) {
       key: item.path,
       // label: meta.label,
       // icon: meta.icon,
-      ...meta,
+      ...meta
     };
 
     if (Array.isArray(item.children) && item.children.length) {
@@ -129,7 +134,7 @@ function filterHasMenu(list) {
         // 子路由和根路由拼接
         return {
           ...item,
-          key: item.key ? `${path}/${item.key}` : item.key,
+          key: item.key ? `${path}/${item.key}` : item.key
         };
       });
       temp.length && (obj.children = temp);
