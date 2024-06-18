@@ -64,11 +64,10 @@ export default function ThemeTest() {
     }
   }
 
-  // function onThemeColor(key) {
-  //   console.log(key)
-  //   // theme-blue
-  //   document.body.className = `theme-blue`;
-  // }
+  function onThemeColor(item) {
+    console.log(item);
+    document.body.className = item.themeColor;
+  }
 
   return (
     <div className="border border-red-500 p-2 ">
@@ -87,24 +86,24 @@ export default function ThemeTest() {
             <Switch id="airplane-mode" onCheckedChange={onSwitchChange} />
             <Label htmlFor="airplane-mode">明暗切换</Label>
           </div>
-          <div className="border border-red-500 ml-4">
-            <TooltipProvider>
-              {/* {themeColor.map((key) => {
+          <div className="border p-1 rounded-md ml-4 flex">
+            <TooltipProvider delayDuration={250}>
+              {themeColorList.map((item) => {
                 return (
-                  <Tooltip key={key}>
+                  <Tooltip key={item.name}>
                     <TooltipTrigger asChild>
                       <button
-                        onClick={onThemeColor}
-                        style={{ "--theme-primary": key }}
+                        onClick={() => onThemeColor(item)}
+                        style={{ "--theme-primary": `hsl(${item.showColor})` }}
                         className="border-[--theme-primary] flex h-9 items-center justify-center rounded-full text-xs w-9"
                       >
                         <span className="h-6 w-6 rounded-full bg-[--theme-primary]"></span>
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>{key}</TooltipContent>
+                    <TooltipContent>{item.name}</TooltipContent>
                   </Tooltip>
                 );
-              })} */}
+              })}
             </TooltipProvider>
           </div>
         </CardContent>

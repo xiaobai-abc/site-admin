@@ -2,6 +2,21 @@ import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 
 const THEME_NAME = "theme";
 
+const showColorList = {
+  zinc: "240 5.9% 10%",
+  slate: "215.4 16.3% 46.9%",
+  stone: "25 5.3% 44.7%",
+  gray: "220 8.9% 46.1%",
+  neutral: "0 0% 45.1%",
+  red: "0 72.2% 50.6%",
+  rose: "346.8 77.2% 49.8%",
+  orange: "24.6 95% 53.1%",
+  green: "142.1 76.2% 36.3%",
+  blue: "221.2 83.2% 53.3%",
+  yellow: "47.9 95.8% 53.1%",
+  violet: "262.1 83.3% 57.8"
+};
+
 // 主题颜色列表
 const colorList = [
   "zinc",
@@ -22,13 +37,15 @@ const colorList = [
 const themeColorList = [
   {
     name: "defalut",
-    color: ""
+    themeColor: "",
+    showColor: "222.2 47.4% 11.2%"
   }
 ].concat(
   (() =>
     colorList.map((color) => ({
       name: color,
-      color: `theme-${color}`
+      themeColor: `theme-${color}`,
+      showColor: showColorList[color]
     })))()
 );
 
