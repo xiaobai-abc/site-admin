@@ -1,12 +1,13 @@
 import axios from "axios";
 import { getAuthCache, clearAuthCache } from "@/utils/auth";
-// import { Message } from "@arco-design/web-react";
+import { Message, Notification } from "@arco-design/web-react";
+import { createElement } from "react";
 // 数据返回的接口
 
 const RequestEnums = {
   OVERDUE: 600, // 登录失效
   FAIL: 999, // 请求失败
-  SUCCESS: 200, // 请求成功
+  SUCCESS: 200 // 请求成功
 };
 
 class RequestHttp {
@@ -44,10 +45,9 @@ class RequestHttp {
       },
       (error) => {
         const { response } = error;
-        // Notification.error(error.message);
-        console.log(response, error);
         if (response) {
-          this.handleCode(response.status, response.statusText);
+          this.handleCode(response.status, response.statusText, error);
+          return Promise.reject(response.data);
         } else {
           switch (error.code) {
             case "ECONNABORTED":
@@ -62,21 +62,34 @@ class RequestHttp {
           // router.replace({
           //   path: "/err",
           // });
-          return;
+          console.log("http 文件里的 navigator online 67 ");
+          return Promise.reject();
         }
+        return Promise.reject(error.data);
       }
     );
   }
-  handleCode(code, statusText) {
+  handleCode(code, statusText, error) {
     switch (code) {
       case 401:
-        console.log(code, statusText);
+        console.log("zxc", code, statusText);
         // console.log(router)
         clearAuthCache();
         window.location.href = "/login";
         // Message.error("身份验证过期~~~");
         break;
       case 500:
+        Notification.error({
+          title: error.name,
+          content: createElement("div", { className: "" }, error.message)
+        });
+        break;
+      case 404:
+        Notification.error({
+          title: error.name,
+          content: createElement("div", { className: "" }, error.message)
+        });
+
         break;
       default:
         break;
@@ -100,8 +113,7 @@ class RequestHttp {
     const header = this.needTokenFun(boo);
     return this.service.get(url, {
       params,
-      ...header,
-      
+      ...header
     });
   }
   post(url, params, boo = true) {
@@ -111,7 +123,7 @@ class RequestHttp {
   put(url, params, boo = true) {
     const header = this.needTokenFun(boo);
     return this.service.put(url, params, {
-      ...header,
+      ...header
     });
   }
   delete(url, params, boo = true) {

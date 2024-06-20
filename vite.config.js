@@ -4,9 +4,9 @@ import { resolve } from "path";
 import react from "@vitejs/plugin-react-swc";
 import legacy from "@vitejs/plugin-legacy";
 import postcssPresetEnv from "postcss-preset-env";
-import tailwindcss from "tailwindcss";
 import autoprefixer from "autoprefixer";
 import browserslist from "browserslist";
+import { vitePluginForArco } from "@arco-plugins/vite-react";
 
 // 浏览器版本配置
 const browserslistConfig = browserslist.loadConfig({ path: "." });
@@ -15,6 +15,7 @@ const browserslistConfig = browserslist.loadConfig({ path: "." });
 export default defineConfig({
   plugins: [
     react(),
+    vitePluginForArco(),
     legacy({
       targets: browserslistConfig, //需要兼容的目标列表，可以设置多个
       additionalLegacyPolyfills: ["regenerator-runtime/runtime"],
@@ -35,20 +36,20 @@ export default defineConfig({
         "es.object.to-string",
         "web.dom-collections.for-each",
         "esnext.global-this",
-        "esnext.string.match-all",
-      ],
-    }),
+        "esnext.string.match-all"
+      ]
+    })
   ],
   resolve: {
     alias: {
-      "@": resolve(__dirname, "./src"),
-    },
+      "@": resolve(__dirname, "./src")
+    }
   },
   envPrefix: ["VITE_", "APP_"],
   css: {
     modules: {},
     postcss: {
-      plugins: [postcssPresetEnv(), tailwindcss, autoprefixer],
+      plugins: [postcssPresetEnv(), autoprefixer]
     },
     preprocessorOptions: {
       less: {
@@ -60,25 +61,33 @@ export default defineConfig({
         additionalData: `@import "${resolve(
           __dirname,
           "src/style/variable.less"
-        )}";`,
-      },
-    },
+        )}";`
+      }
+    }
   },
   build: {
     //分包策略
     rollupOptions: {
       output: {
         entryFileNames: "js/[name]-[hash].js",
-        chunkFileNames: "js/[name]-chunk-[hash].js",
-        assetFileNames: "css/[name]-[hash][extname]",
+        // chunkFileNames: "js/[name]-chunk-[hash].js",
+        // assetFileNames: "css/[name]-[hash][extname]",
+        chunkFileNames: (chunkInfo) => {
+          const facadeModuleId = chunkInfo.facadeModuleId
+            ? chunkInfo.facadeModuleId.split("/")
+            : [];
+          const fileName =
+            facadeModuleId[facadeModuleId.length - 2] || "[name]";
+          return `js/${fileName}/[name].[hash].js`;
+        },
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
             return "vendor";
           }
-        },
+        }
       },
-      plugins: [],
-    },
+      plugins: []
+    }
   },
   // base: "./",
   server: {
@@ -96,6 +105,6 @@ export default defineConfig({
       //   secure: false, //关键参数，不懂的自己去查
       //   rewrite: (path) => path.replace(/^\/api/, ""),
       // },
-    },
-  },
+    }
+  }
 });
