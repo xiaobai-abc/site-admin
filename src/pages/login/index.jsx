@@ -23,40 +23,39 @@ function LoginPage() {
   const formRef = useRef();
 
   const initFormData = {
-    username: "",
-    password: ""
+    username: "admin",
+    password: "336699"
   };
 
-  async function onSubmit(v) {
-    // setLoading(true);
+  function onSubmit(v) {
+    setLoading(true);
 
-  
-
-    return;
-
-    // 登录
-    const resp = await postLogin(v);
-    if (resp && resp.code == 200) {
-      setAuthCache(resp.data.token);
-      naviagate("/");
-    } else {
-      if (formRef.current) {
-        formRef.current.setFields({
-          username: {
-            error: {
-              message: "账号或者密码错误"
-            }
-          },
-          password: {
-            error: {
-              message: "账号或者密码错误"
-            }
+    postLogin(v)
+      .then((resp) => {
+        if (resp && resp.code == 200) {
+          setAuthCache(resp.data.token);
+          naviagate("/");
+        } else {
+          if (formRef.current) {
+            formRef.current.setFields({
+              username: {
+                error: {
+                  message: "账号或者密码错误"
+                }
+              },
+              password: {
+                error: {
+                  message: "账号或者密码错误"
+                }
+              }
+            });
           }
-        });
-      }
-      Message.error(resp?.message || "登录失败");
-    }
-    setLoading(false);
+          Message.error(resp?.message || "登录失败");
+        }
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
@@ -92,14 +91,22 @@ function LoginPage() {
             />
           </FormItem>
           <FormItem>
-            <Button
-              long
-              className={styles.submitBtn}
-              htmlType="submit"
-              loading={loading}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center"
+              }}
             >
-              登录
-            </Button>
+              <span style={{ fontSize: "12px" }}>管理部分没有注册</span>
+              <Button
+                className={styles.submitBtn}
+                htmlType="submit"
+                loading={loading}
+              >
+                登录
+              </Button>
+            </div>
           </FormItem>
         </Form>
       </div>

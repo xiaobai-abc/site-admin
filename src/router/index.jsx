@@ -1,5 +1,6 @@
 import LayoutLoading from "@/layout/component/Loading";
 import { getAuthCache } from "@/utils/auth/index.js";
+import { filterRoutes } from "./util/auth";
 import { asyncRoutes, basicRoutes, PAGE_NOT_FOUND_ROUTE } from "./routes";
 import { REDIRECT_PATH } from "./constant";
 import { wrapRoutesWithLazy } from "./util";
@@ -11,7 +12,7 @@ import {
   setLastUpdateTime,
   setDynamicAddedRoutes,
   setBuilderMenuList,
-  authVerify,
+  authVerify
 } from "@/store/modules/authSlice";
 
 // 存入白名单
@@ -20,30 +21,31 @@ const whiteRouteName = [];
   whiteRouteName.push(route.path);
 });
 
-const needAuthorization = true
+const needAuthorization = true;
 
 export default function getRoutes() {
-  // console.log("app");
   const loaction = useLocation();
   const naviagate = useNavigate();
   const dispatch = useDispatch();
 
-  const { status, lastUpdateTime, dynamicAddedRoutes } =
+  const { status, lastUpdateTime, dynamicAddedRoutes, userInfo } =
     useSelector(selectAuthSlice);
 
   //路由列表 只存储显示的路由列表 不包含基本路由
   const [routes, setRoutes] = useState([]);
-  const authVerifyCallback = useCallback(() => dispatch(authVerify()), []);
+  const authVerifyCallback = useCallback(
+    async () => await dispatch(authVerify()),
+    []
+  );
 
   const GenerateRoutesMemo = useMemo(() => {
     return <GenerateRoutes routes={routes}> </GenerateRoutes>;
   }, [routes]);
 
   useEffect(() => {
-
-    if(!needAuthorization){
-      console.log("不需要权限验证")
-      return
+    if (!needAuthorization) {
+      console.log("不需要权限验证");
+      return;
     }
 
     const path = loaction.pathname;
@@ -65,31 +67,32 @@ export default function getRoutes() {
     if (lastUpdateTime === 0) {
       authVerifyCallback();
     }
-
-    if (dynamicAddedRoutes) return;
-
-    setRoutes(asyncRoutes);
-    const menuList = processAndModifyRoutes(asyncRoutes);
-
-    dispatch(
-      setBuilderMenuList(
-        menuList.sort((a, b) => {
-          return a.order - b.order;
-        })
-      )
-    );
-    dispatch(setDynamicAddedRoutes(true));
   }, [loaction.pathname]);
 
-  // useEffect(() => {
-  //   if (status === "successed") {
-  //     // 生成权限菜单列表 *去除element
-  //     // dispatch(setBuilderMenuList(handlerList));
-  //     // 根据权限生成路由
-  //     // setRoutes(filterList);
-  //     // setRoutes(asyncRoutes);
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (status === "successed") {
+      // 生成权限菜单列表 *去除element
+      // dispatch(setBuilderMenuList(handlerList));
+      // 根据权限生成路由
+      // setRoutes(filterList);
+      // setRoutes(asyncRoutes);
+
+      if (dynamicAddedRoutes) return;
+      // filterRoutes(0),
+      console.log("userInfo", userInfo);
+      setRoutes(asyncRoutes);
+      const menuList = processAndModifyRoutes(asyncRoutes);
+
+      dispatch(
+        setBuilderMenuList(
+          menuList.sort((a, b) => {
+            return a.order - b.order;
+          })
+        )
+      );
+      dispatch(setDynamicAddedRoutes(true));
+    }
+  }, [status]);
 
   if (status === "loading") return <LayoutLoading />;
 
@@ -122,7 +125,7 @@ function GenerateRoutes({ routes }) {
   const finishRoutes = [
     ...basicRoutes,
     ...handlerLazyRoutes,
-    PAGE_NOT_FOUND_ROUTE,
+    PAGE_NOT_FOUND_ROUTE
   ];
 
   return useRoutes(finishRoutes);
@@ -138,7 +141,7 @@ function processAndModifyRoutes(list) {
   return list.map((item) => {
     const { children, element, ...rest } = item;
     const modifiedItem = {
-      ...rest,
+      ...rest
       // key: item.path,
       // ...(meta || {}),
     };

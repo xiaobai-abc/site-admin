@@ -1,0 +1,74 @@
+.defaultLayout {
+  // height: 100vh;
+  // height: 100dvh;
+  overflow: hidden;
+  background-color: var(--color-fill-2);
+
+  .header {
+    position: fixed;
+    width: 100%;
+    min-width: 1500px;
+    top: 0;
+    left: 0;
+    height: 60px;
+    height: fit-content;
+    z-index: 100;
+    background-color: #fff;
+  }
+
+}
+
+.sider {
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  box-sizing: border-box;
+  padding-top: 60px;
+  background-color: var(--color-menu-light-bg);
+}
+
+// 侧边栏
+.siderMenu {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  .overflow {
+    flex: 1 0 auto;
+    height: 0;
+  }
+}
+
+// 内容
+.content {
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  border-radius: 3px;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+
+  .contentBox {
+    padding: 16px 20px 0;
+  }
+}
+
+
+.exit {
+  padding: 16px 0;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.08) 2px 0px 5px 0px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  span {
+    font-size: 14px;
+    padding-left: 10px;
+  }
+}

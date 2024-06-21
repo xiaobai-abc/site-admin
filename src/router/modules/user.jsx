@@ -10,19 +10,19 @@ export default {
       path: "info",
       element: () => import("@/pages/user/info"),
       meta: {
-        label: "用户信息",
-      },
+        label: "用户信息"
+      }
     },
     {
       path: "setting",
       element: () => import("@/pages/user/setting"),
       meta: {
-        label: "用户设置",
-      },
-    },
+        label: "用户设置"
+      }
+    }
   ],
   meta: {
     label: "个人中心",
-    icon: "IconDashboard",
-  },
+    icon: "IconUser"
+  }
 };

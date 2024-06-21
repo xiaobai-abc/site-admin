@@ -32,7 +32,6 @@ class RequestHttp {
      */
     this.service.interceptors.response.use(
       (response) => {
-        // console.log(response)
         const { data, config } = response; // 解构
         if (response.status === RequestEnums.OVERDUE) {
           return Promise.reject(data);
@@ -45,6 +44,7 @@ class RequestHttp {
       },
       (error) => {
         const { response } = error;
+
         if (response) {
           this.handleCode(response.status, response.statusText, error);
           return Promise.reject(response.data);

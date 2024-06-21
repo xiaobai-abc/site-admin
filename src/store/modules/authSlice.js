@@ -16,7 +16,10 @@ const initialState = {
   lastUpdateTime: 0,
   dynamicAddedRoutes: false, //是否生成路由
   builderMenuList: [],
-  perCode: 1, //用户权限
+  // perCode: 1, //用户权限
+  userInfo: {
+    rule: -1
+  }
 };
 
 export const authSlice = createSlice({
@@ -32,13 +35,12 @@ export const authSlice = createSlice({
       state.lastUpdateTime = payload;
     },
     setDynamicAddedRoutes(state, { payload }) {
-      console.log(state.dynamicAddedRoutes, payload, ">>>");
       state.dynamicAddedRoutes = payload;
     },
     // 设置菜单列表
     setBuilderMenuList(state, { payload }) {
       state.builderMenuList = payload;
-    },
+    }
   },
   // 异步请求数据
   extraReducers(builder) {
@@ -51,31 +53,25 @@ export const authSlice = createSlice({
         const { code, data, message } = action.payload;
         state.status = "successed";
         state.lastUpdateTime = new Date().getTime();
-        // console.log("获取用户信息", data);
         // 用户信息
         if (code == 200) {
           // console.log("获取用户信息", data);
-          // state.userInfo = {
-          //   userName: data.user_name,
-          //   typeName: data.user_type.type_name,
-          //   typeCode: data.user_type.type_code,
-          // };
+          state.userInfo = data.userInfo;
           // state.adminTitle = data.admin_title;
-          return;
         }
       })
       .addCase(authVerify.rejected, (state) => {
         state.status = "rejected";
         console.log("reject");
       });
-  },
+  }
 });
 
 export const {
   resetState,
   setLastUpdateTime,
   setDynamicAddedRoutes,
-  setBuilderMenuList,
+  setBuilderMenuList
 } = authSlice.actions;
 export const selectAuthSlice = (state) => state[AUTH_NAME];
 
