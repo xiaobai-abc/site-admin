@@ -1,16 +1,24 @@
 import RequestHttp from "./http";
 
 const URL = import.meta.env.APP_BASE_URL;
-console.log(URL)
+console.log(URL);
 const config = {
   // 默认地址
   baseURL: URL,
   // 设置超时时间
   timeout: 20 * 1000,
   // 跨域时候允许携带凭证
-  withCredentials: false,
+  withCredentials: false
 };
 
 const axios = new RequestHttp(config);
+
+export function handler(resp) {
+  if (resp && resp.code == 200) {
+    return resp.data;
+  }
+
+  return Promise.reject(resp?.message);
+}
 
 export default axios;
