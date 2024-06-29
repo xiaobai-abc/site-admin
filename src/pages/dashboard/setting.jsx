@@ -4,13 +4,17 @@ import {
   Space,
   Button,
   Typography,
-  Descriptions
+  Descriptions,
+  Image
 } from "@arco-design/web-react";
-import { homeSetting } from "./modules/api";
 
+import { homeSetting } from "./modules/api";
 import styles from "./index.module.less";
 
-const settingMap = new Map([["title", "网站标题"]]);
+const settingMap = new Map([
+  ["title", "网站标题"],
+  ["image", "图片"]
+]);
 
 export default function Setting() {
   const [settingData, setSetting] = useState([]);
@@ -23,12 +27,41 @@ export default function Setting() {
 
   function onGetHomeData() {
     homeSetting().then((data) => {
-      const settingData = Object.keys(data).map((key) => {
-        return {
-          label: settingMap.get(key),
-          value: data[key]
-        };
-      });
+      const settingData = Object.keys(data)
+        .map((key) => {
+          const ele = data[key];
+          const label = settingMap.get(key);
+          if (!label) return null;
+          switch (typeof ele) {
+            case "string":
+              return {
+                label: label,
+                value: ele
+              };
+            case "object":
+              return {
+                label: label,
+                value: (
+                  <Image.PreviewGroup infinite>
+                    <Space>
+                      {ele.map((src, index) => (
+                        <Image
+                          key={index}
+                          src={src}
+                          width={200}
+                          alt={`lamp${index + 1}`}
+                        />
+                      ))}
+                    </Space>
+                  </Image.PreviewGroup>
+                )
+              };
+
+            default:
+              return null;
+          }
+        })
+        .filter((item) => item);
       setSetting(settingData);
     });
   }
@@ -49,7 +82,7 @@ export default function Setting() {
               编辑
             </Button>
           </div>
-          {JSON.stringify(settingData)}
+
           <div className={styles.cardView}>
             <Descriptions
               column={1}
