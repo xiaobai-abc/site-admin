@@ -12,13 +12,6 @@ export default {
       meta: {
         label: "工作台"
       }
-    },
-    {
-      path: "setting",
-      element: () => import("@/pages/dashboard/setting.jsx"),
-      meta: {
-        label: "设置"
-      }
     }
   ],
   meta: {
