@@ -53,6 +53,9 @@ function LoginPage() {
           Message.error(resp?.message || "登录失败");
         }
       })
+      .catch((err) => {
+        Message.error(err?.message || "登录失败");
+      })
       .finally(() => {
         setLoading(false);
       });
